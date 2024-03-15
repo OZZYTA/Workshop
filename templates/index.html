@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="en">
+<link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
+<link rel="icon" href="/favicon.ico" type="image/x-icon">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pragma - Chat con Botty</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <style>
+        #header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            position: relative;
+            /* Posición relativa para el contenedor */
+        }
+
+        #description {
+            max-width: 600px;
+            margin: 10px auto;
+            text-align: justify;
+            font-size: 13px;
+            color: #6F2FD3;
+        }
+
+        #description_container {
+            max-width: 200px;
+            margin: 10px;
+            text-align: justify;
+            font-size: 13px;
+            color: #6F2FD3;
+        }
+
+        #instructions {
+            width: 220px;
+            /* Ancho deseado para la columna de instrucciones */
+            background-color: #E5E5EA;
+            /* Color de fondo para la columna de instrucciones */
+            padding: 10px;
+            /* Espaciado interior */
+            border-radius: 8px;
+            /* Borde redondeado */
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            /* Sombra */
+            position: absolute;
+            /* Posición absoluta para superponerlo al chat-container */
+            left: 0;
+            /* Alineación a la izquierda */
+            top: 100px;
+            /* Alineación en la parte superior */
+            text-align: left;
+            font-size: 12px;
+            color: #6F2FD3;
+        }
+
+        #feedback {
+            width: 120px;
+            /* Ancho deseado para la columna de instrucciones */
+            padding: 10px;
+            /* Espaciado interior */
+            border-radius: 8px;
+            /* Borde redondeado */
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            /* Sombra */
+            position: absolute;
+            /* Posición absoluta para superponerlo al chat-container */
+            text-align: left;
+            font-size: 12px;
+            top: 60px;
+            right: 10px;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f4f4;
+            color: #333;
+        }
+
+        h1 {
+            text-align: center;
+            margin-top: 20px;
+            color: #333;
+        }
+
+        #chat-container {
+            max-width: 600px;
+            margin: 20px auto;
+            background-color: #BDC7DC;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            overflow-y: scroll;
+            /* scroll vertical */
+            max-height: 300px;
+            /* Altura máxima del área de chat */
+            padding: 10px;
+            /* espacio interior */
+        }
+
+        #chat-history {
+            padding: 10px;
+        }
+
+        .message {
+            margin: 10px;
+            padding: 10px;
+            border-radius: 8px;
+        }
+
+        .user-message {
+            background-color: #6F2FD3;
+            color: #fff;
+            text-align: right;
+        }
+
+        .assistant-message {
+            background-color: #d491f5;
+            text-align: left;
+        }
+
+        .typing-message {
+            color: #888;
+            text-align: left;
+        }
+
+        #user-input {
+            max-width: 600px;
+            margin: auto;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            max-width: 600px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            border-top: 1px solid #ccc;
+        }
+
+        #user-message {
+            flex-grow: 1;
+            padding: 8px;
+            border: none;
+            border-radius: 4px;
+        }
+
+        button {
+            background-color: #6F2FD3;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            padding: 8px 12px;
+            cursor: pointer;
+        }
+
+        .user-emoji,
+        .assistant-emoji {
+            font-size: 20px;
+            margin-right: 10px;
+        }
+
+        /* Estilos para los botones de pulgar arriba */
+        .thumb-up-button {
+            font-size: 16px;
+            /* Tamaño del pulgar hacia arriba */
+            background-color: transparent;
+            /* Fondo transparente */
+            border: none;
+            /* Sin borde */
+            margin-left: 5px;
+            /* Espacio entre el pulgar y el texto */
+        }
+
+        /* Estilos para los botones de pulgar abajo */
+        .thumb-down-button {
+            font-size: 16px;
+            /* Tamaño del pulgar hacia abajo */
+            background-color: transparent;
+            /* Fondo transparente */
+            border: none;
+            /* Sin borde */
+            margin-left: 5px;
+            /* Espacio entre el pulgar y el texto */
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-light">
+        <a class="navbar-brand text-dark" href="https://www.pragma.co/es/">Pragma S.A</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+            aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+    </nav>
+
+    <div class="container mt-4">
+        <center><img src="static\pragma_logo.png" alt="Seguros Universal" /></center>
+        <h1>¡Bienvenido a Botty! <img src="static\bot-conversacional.png" alt="Pragma Botty" /></h1>
+        <div id="description"><br>
+            <span>Descubre las increibles herramientas que estan transformando la forma en que accedes a la información,
+                la creas e interacturas con ella. Nuestro asistente de chat utiliza la potencia de Azure
+                Search AI y Azure OpenAI, realizando busqueda semántica y vectorizada para brindarte un inforamción
+                clara inteligente y fácil de buscar como
+                nunca antes.</span>
+        </div>
+        <div id="feedback">
+            <span>Nos interesa conocer tu opinión para que Botty sea siempre mejor. Cuéntanos a continuación cómo te han
+                parecido las respuestas que te ha dado el chat asistente.
+                <!-- Botón para abrir el modal -->
+                <button id="open-iframe-modal">¿Qué opinas?</button>
+            </span>
+        </div>
+        <div id="instructions">
+            <h3>¿Qué puedes esperar de nuestro Asistente de Chat?</h3>
+            <ul>
+                <li>Acceso rápido y eficiente a información detallada.</li>
+                <li>Búsquedas precisas y personalizadas para tus necesidades.</li>
+            </ul>
+            <p>No pierdas más tiempo buscando en archivos interminables. Con Botty, la información que necesitas está al
+                alcance de tu mano.</p>
+
+        </div>
+
+        <div id="chat-container">
+            <div id="chat-history">
+                <div class="message placeholder-message">
+                    Tu chat aquí 📃
+                </div>
+            </div>
+            <div id="typing-status" class="typing-message"></div> <!-- Mensaje de "escribiendo" -->
+        </div>
+        <div id="user-input">
+            <input type="text" id="user-message" placeholder="Escribe un mensaje..." onkeydown="handleKeyDown(event)" />
+            <button onclick="sendMessage()">Enviar</button>
+        </div><br><br>
+        <center><button onclick="clearChat()">Limpiar Chat</button> </center><br><br>
+
+
+        <!-- Modal con iframe -->
+        <div id="iframe-modal"
+            style="display: none; background-color: rgba(0, 0, 0, 0.5); position: fixed; top: 0; left: 0; width: 100%; height: 100%; justify-content: center; align-items: center;">
+            <div style="background-color: #fff; padding: 20px; border-radius: 8px; width: 600px; height: 420px;">
+                <iframe width="640px" height="400px"
+                    src="https://forms.office.com/Pages/ResponsePage.aspx?id=lOVJgyNsT0i7SALNTsJwKMiFcwCfB7dIlsOig_obR3BUNUpYNDVZMVZTNzBCMDlPTTNKRkMxUTY1WC4u&embed=true"
+                    frameborder="0" marginwidth="0" marginheight="0"
+                    style="border: none; max-width:100%; max-height:75vh" allowfullscreen webkitallowfullscreen
+                    mozallowfullscreen msallowfullscreen> </iframe>
+                <button id="close-iframe-modal">Cerrar</button>
+            </div>
+        </div>
+
+
+        <script>
+
+            let firstMessageSent = false;
+
+            function handleKeyDown(event) {
+                const userMessage = document.getElementById("user-message").value;
+                if (event.key === "Enter") {
+                    event.preventDefault(); // Evita que se agregue una nueva línea
+                    sendMessage();
+                }
+            }
+
+            function sendMessage() {
+                const userMessage = document.getElementById("user-message").value;
+                if (userMessage.trim() === "") return;
+
+                // Elimina el placeholder una vez que se envía el primer mensaje
+                if (!firstMessageSent) {
+                    const placeholder = document.querySelector(".placeholder-message");
+                    if (placeholder) {
+                        placeholder.remove();
+                    }
+                    firstMessageSent = true;
+                }
+
+                // Agrega el mensaje del usuario al historial
+                const chatHistory = document.getElementById("chat-history");
+                chatHistory.innerHTML += `<div class="message user-message">
+                ${userMessage}<span class="user-emoji"></span>🤓
+            </div>`;
+                document.getElementById("user-message").value = "";
+                // Muestra "Escribiendo" mientras se carga la respuesta
+                const typingStatus = document.getElementById("typing-status");
+                typingStatus.innerText = "Escribiendo...";
+
+                // Realiza una solicitud al servidor Flask para obtener la respuesta
+                fetch("/chat", {
+                    method: "POST",
+                    body: new URLSearchParams({ user_input: userMessage }),
+                    headers: {
+                        "Content-Type": "application/x-www-form-urlencoded"
+                    }
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        // Elimina "Escribiendo" una vez que se recibe la respuesta
+                        typingStatus.innerText = "";
+
+                        // Construye el HTML para los enlaces de las referencias
+
+                        // Agrega la respuesta del asistente y las referencias al historial
+                        chatHistory.innerHTML += `<div class="message assistant-message">
+                    <img src="/static/bot-chat.png" alt="Logo" class="assistant-logo">
+                    <span class="assistant-text">${data.response}
+                        <button class="thumb-up-button" onclick="handleFeedbackAndLike(this, '${userMessage}', '${data.response}')">
+                            <img class="thumb-up-image" src="/static/like.png">
+                        </button>
+
+                        <button class="thumb-down-button" onclick="handleFeedbackAndDislike(this, '${userMessage}', '${data.response}')">
+                            <img class="thumb-down-image" src="/static/dislike.png">
+                        </button>
+                    </span>
+                    </div>`;
+
+                        // Limpia el cuadro de entrada del usuario
+                        document.getElementById("user-message").value = "";
+
+                        // Hace scroll hacia abajo para mostrar la última respuesta
+                        chatHistory.scrollTop = chatHistory.scrollHeight;
+                    });
+
+            }
+            // Abre el modal con el iframe al hacer clic en el botón "Abrir iframe"
+            const openIframeButton = document.getElementById("open-iframe-modal");
+            const iframeModal = document.getElementById("iframe-modal");
+            openIframeButton.addEventListener("click", () => {
+                iframeModal.style.display = "flex";
+            });
+
+            // Cierra el modal al hacer clic en el botón "Cerrar"
+            const closeIframeButton = document.getElementById("close-iframe-modal");
+            closeIframeButton.addEventListener("click", () => {
+                iframeModal.style.display = "none";
+            });
+
+            // Función para borrar el chat
+            function clearChat() {
+                const chatHistory = document.getElementById("chat-history");
+                chatHistory.innerHTML = ""; // Borra todos los mensajes
+
+                // Restablece la variable que controla si se envió el primer mensaje
+                firstMessageSent = false;
+
+                // Borra también el historial de mensajes en el servidor
+                fetch("/clear-chat", {
+                    method: "POST"
+                })
+                    .then(response => {
+                        // Aquí puedes realizar alguna acción adicional si es necesario
+                    });
+            }
+
+            function sendFeedback(userMessage, botResponse, feedback) {
+
+                fetch("/feedback", {
+                    method: "POST",
+                    body: new URLSearchParams({ user_message: userMessage, bot_response: botResponse, feedback: feedback }),
+                    headers: {
+                        "Content-Type": "application/x-www-form-urlencoded"
+                    }
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        // Puedes realizar alguna acción adicional si es necesario
+                    });
+            }
+
+            function handleFeedbackAndLike(buttonElement, userMessage, botResponse) {
+                sendFeedback(userMessage, botResponse, 'OK');
+
+                // Busca el elemento de imagen dentro del botón actual
+                var likeElement = buttonElement.getElementsByClassName("thumb-up-image")[0];
+                var dislikeElement = buttonElement.closest(".message").getElementsByClassName("thumb-down-image")[0];
+
+                // Restablece ambos botones al estado desactivado
+                likeElement.setAttribute("src", "/static/like.png");
+                dislikeElement.setAttribute("src", "/static/dislike.png");
+
+                // Activa el botón actual
+                likeElement.setAttribute("src", "/static/like_blue.png");
+            }
+
+            function handleFeedbackAndDislike(buttonElement, userMessage, botResponse) {
+                sendFeedback(userMessage, botResponse, 'Not OK');
+
+                // Busca el elemento de imagen dentro del botón actual
+                var likeElement = buttonElement.closest(".message").getElementsByClassName("thumb-up-image")[0];
+                var dislikeElement = buttonElement.getElementsByClassName("thumb-down-image")[0];
+
+                // Restablece ambos botones al estado desactivado
+                likeElement.setAttribute("src", "/static/like.png");
+                dislikeElement.setAttribute("src", "/static/dislike.png");
+
+                // Activa el botón actual
+                dislikeElement.setAttribute("src", "/static/dislike_red.png");
+            }
+
+
+
+        </script>
+        <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+</body>
+
+</html>

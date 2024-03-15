@@ -1,0 +1,46 @@
+/* Reset de estilos para eliminar estilos predeterminados del navegador */
+body, h1, form {
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: Arial, sans-serif; /* Cambiar la fuente predeterminada */
+    background-color: #f0f0f0; /* Cambiar el color de fondo */
+    padding: 20px;
+}
+
+h1 {
+    color: #333; /* Cambiar el color del encabezado */
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+form {
+    text-align: center;
+}
+
+input[type="text"] {
+    width: 80%; /* Ancho del campo de entrada */
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ccc; /* Borde del campo de entrada */
+    border-radius: 4px;
+}
+
+input[type="submit"] {
+    background-color: #007BFF; /* Cambiar el color de fondo del botón */
+    color: #fff; /* Cambiar el color del texto del botón */
+    padding: 10px 20px;
+    font-size: 16px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+#response {
+    margin-top: 20px;
+    font-size: 18px;
+    color: #333;
+    text-align: center;
+}
